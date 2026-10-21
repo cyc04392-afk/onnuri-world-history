@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, 'tools', 'raw'); os.makedirs(RAW, exist_ok=True)
 os.makedirs(os.path.join(ROOT, 'img'), exist_ok=True); os.makedirs(os.path.join(ROOT, 'sp'), exist_ok=True)
 UA = 'OnnuriWorldHistory/1.0 (personal study app; cyc04392@gmail.com)'
-SLEEP = 3
+SLEEP = 8
 
 def fetch(commons, width, out):
     import hashlib, urllib.parse
@@ -32,7 +32,7 @@ def fetch(commons, width, out):
                     Image.open(out).verify(); time.sleep(0.6); return True
                 except Exception: pass
             if code in ('404', '400'): break
-            time.sleep(25 if code == '429' else 4)
+            time.sleep(11 if code == '429' else 4)
     return False
 
 def process(no):

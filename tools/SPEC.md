@@ -113,7 +113,9 @@
 **서술형(essay)**: 실제 47~50번은 "~의 배경/내용/영향을 서술하시오", "밑줄 친 인물과 그가 한 일을 쓰시오" 수준. `points`는 채점 포인트(각 1점짜리 핵심 사실)로.
 
 **이미지(images)**
-- 위키미디어 공용(commons.wikimedia.org)에 **실제로 있는 파일**만. 확인 방법: `curl -sI -o /dev/null -w "%{http_code}" "https://commons.wikimedia.org/wiki/Special:FilePath/<파일명(File: 제외, 공백은 _)>"` → 200 또는 3xx면 존재. **요청 사이에 2초 이상 간격**(API 제한). 저작자·라이선스는 `WebFetch`로 파일 페이지를 읽어 확인(불명확하면 "Wikimedia Commons" 만 쓰고 라이선스 미상이라 적지 말고, 가능한 한 퍼블릭 도메인·CC 자료를 고른다).
+- 위키미디어 공용(commons.wikimedia.org)에 **실제로 있는 파일**만. 확인 방법: `curl -s -o /dev/null -w "%{http_code}" "https://commons.wikimedia.org/wiki/Special:Redirect/file/<파일명(File: 제외, 공백은 _, URL 인코딩)>"` → **301이면 존재, 404면 없음**. (`Special:FilePath`는 없는 파일에도 302를 주므로 쓰지 말 것.) **요청 사이에 5초 이상 간격** — Commons는 연속 요청에 429를 자주 돌려준다. 429가 오면 30초 쉬고 다시.
+- 저작자·라이선스: `WebFetch`는 Commons 파일 페이지에서 자주 실패하므로, `curl -sL -A "OnnuriWorldHistory/1.0 (personal study app)" "https://commons.wikimedia.org/wiki/File:<파일명>"` 으로 HTML을 받아 `licensetpl_short`(라이선스)와 `fileinfotpl_aut`(저작자) 근처를 파싱한다. 퍼블릭 도메인·CC BY·CC BY-SA·CC0 자료만 고른다. 저작자가 "Unknown author"면 "작자 미상"으로 적는다.
+- 작업 파일(부품 JSON·조립 스크립트)은 스크래치패드 루트가 아니라 **`<scratchpad>/chNN/` 하위 폴더**에 둘 것 — 여러 강을 동시에 작업하므로 루트에 두면 서로 덮어쓴다.
 - 종류: 지도(영토·교역로·문명 분포) 3~5개, 유물·유적 사진, 회화·초상, 문서(사료) 이미지. `type`은 map/photo/art/doc.
 - `cap`은 한국어 40~90자, 무엇인지 + 왜 중요한지.
 - 파일 내려받기·스프라이트 제작은 별도 파이프라인이 하므로 **다운로드하지 말 것**.
