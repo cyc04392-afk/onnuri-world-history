@@ -1,4 +1,4 @@
-const CACHE = 'onnuri-v4';
+const CACHE = 'onnuri-v5';
 const CORE = ['./', './index.html', './manifest.webmanifest', './data/index.json', './icons/icon-192.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(self.clients.claim()); });
