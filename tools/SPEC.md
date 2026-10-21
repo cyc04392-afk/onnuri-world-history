@@ -114,7 +114,7 @@
 
 **이미지(images)**
 - 위키미디어 공용(commons.wikimedia.org)에 **실제로 있는 파일**만. 확인 방법: `curl -s -o /dev/null -w "%{http_code}" "https://commons.wikimedia.org/wiki/Special:Redirect/file/<파일명(File: 제외, 공백은 _, URL 인코딩)>"` → **301이면 존재, 404면 없음**. (`Special:FilePath`는 없는 파일에도 302를 주므로 쓰지 말 것.) **요청 사이에 5초 이상 간격** — Commons는 연속 요청에 429를 자주 돌려준다. 429가 오면 30초 쉬고 다시.
-- 저작자·라이선스: `WebFetch`는 Commons 파일 페이지에서 자주 실패하므로, `curl -sL -A "OnnuriWorldHistory/1.0 (personal study app)" "https://commons.wikimedia.org/wiki/File:<파일명>"` 으로 HTML을 받아 `licensetpl_short`(라이선스)와 `fileinfotpl_aut`(저작자) 근처를 파싱한다. 퍼블릭 도메인·CC BY·CC BY-SA·CC0 자료만 고른다. 저작자가 "Unknown author"면 "작자 미상"으로 적는다.
+- 저작자·라이선스: `WebFetch`는 Commons 파일 페이지에서 자주 실패하므로, `curl -sL -A "OnnuriWorldHistory/1.0 (personal study app)" "https://commons.wikimedia.org/wiki/File:<파일명>"` 으로 HTML을 받아 `licensetpl_short`(라이선스)와 `fileinfotpl_aut`(저작자) 근처를 파싱한다(HTML에서 class 이름의 밑줄이 `&#95;`로 이스케이프되어 있을 수 있으니 `&#95;`→`_` 치환 후 찾을 것). Commons가 429를 돌려주면 30초 쉬고 재시도하며, 존재 확인은 12초 간격이 안정적이다. 퍼블릭 도메인·CC BY·CC BY-SA·CC0 자료만 고른다. 저작자가 "Unknown author"면 "작자 미상"으로 적는다.
 - 작업 파일(부품 JSON·조립 스크립트)은 스크래치패드 루트가 아니라 **`<scratchpad>/chNN/` 하위 폴더**에 둘 것 — 여러 강을 동시에 작업하므로 루트에 두면 서로 덮어쓴다.
 - 종류: 지도(영토·교역로·문명 분포) 3~5개, 유물·유적 사진, 회화·초상, 문서(사료) 이미지. `type`은 map/photo/art/doc.
 - `cap`은 한국어 40~90자, 무엇인지 + 왜 중요한지.

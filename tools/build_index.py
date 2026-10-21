@@ -20,7 +20,7 @@ trend = {}
 tp = os.path.join(D, 'trend.json')
 if os.path.exists(tp): trend = json.load(open(tp, encoding='utf-8')).get('byCh', {})
 
-chapters = []; G = {}; A = {}; EX = []
+chapters = []; G = {}; A = {}; EX = []; QI = []
 for no, title, era, stage in PLAN:
     p = os.path.join(D, f'ch{no:02d}.json')
     row = {'no': no, 'title': title, 'era': era, 'stage': stage, 'ready': False, 'nq': 0, 'ne': 0, 'ni': 0, 'ng': 0, 'ns': 0, 'nt': trend.get(str(no), 0)}
@@ -37,11 +37,13 @@ for no, title, era, stage in PLAN:
         for a, t in d['alias'].items():
             if a not in A: A[a] = t
         for ex in d['exam']: EX.append({'id': ex['id'], 'ch': no, 'src': ex['src'], 'stem': ex['stem'], 'kw': ex['kw']})
+        for q in d['q']: QI.append({'k': f'{no:02d}:{q["n"]}', 'ch': no, 'n': q['n'], 't': re.sub(r'\{\{(.+?)\}\}', r'\1', q['text']) + ' ' + ' '.join(q.get('kw', []))})
     chapters.append(row)
 # drop aliases that point to a term that later got absorbed/missing
 A = {a: t for a, t in A.items() if t in G and a not in G}
 json.dump({'eras': ERAS, 'chapters': chapters, 'pages': {}}, open(os.path.join(D, 'index.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 json.dump({'g': G, 'alias': A}, open(os.path.join(D, 'glossary.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 json.dump(EX, open(os.path.join(D, 'exam_all.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+json.dump(QI, open(os.path.join(D, 'qindex.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 r = [c for c in chapters if c['ready']]
 print(f"ready {len(r)}/34 · q {sum(c['nq'] for c in r)} · exam {len(EX)} · essay {sum(c['ns'] for c in r)} · images {sum(c['ni'] for c in r)} · glossary {len(G)} (alias {len(A)})")
