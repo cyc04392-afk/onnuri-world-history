@@ -225,10 +225,32 @@ body.study-on .nav{display:none}
 .expl h5{margin:0 0 4px;font-size:12px;color:var(--blue)}
 .optx{font-size:12px;color:var(--muted);padding:2px 0 6px 38px;line-height:1.5}
 .optx.right{color:var(--blue)}
+.qlist .qi{padding:10px 0;border-bottom:1px solid var(--line)}
+.qlist .qi-h{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.qlist .qi-h .sp{flex:1}
+.qn-s{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--soft);font-size:11px;font-weight:700}
+.qlist .qi-t{font-size:14px;line-height:1.8;word-break:keep-all}
+.prow{display:flex;align-items:center;gap:10px;padding:5px 0}
+.prow .pl{width:88px;flex:none;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .pb{flex:1;height:10px;border-radius:5px;background:var(--soft);overflow:hidden}
+.prow .pb i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--main-d),var(--main))}
+.prow .pv{width:70px;text-align:right;font-size:12px;color:var(--muted);flex:none}
+.era-row{cursor:pointer}
+.bars7{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:130px}
+.bars7 .b7{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
+.bars7 .b7 i{width:70%;max-width:34px;border-radius:8px;background:var(--main);display:block}
+.bars7 .b7 i.none{background:var(--line)}
+.bars7 .v{font-size:11px;color:var(--muted);height:14px}
+.bars7 .d{font-size:11px;color:var(--muted)}
+#daily-foot{bottom:calc(66px + env(safe-area-inset-bottom,0px))}
+.daily-next{margin:6px 0 10px;text-align:center}
+.daily-next .pill-btn{font-size:16px;padding:14px}
 .daily-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow)}
 .backdaily{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:35;background:var(--fg);color:var(--app);border-radius:999px;padding:9px 16px;font-weight:700;font-size:13px;box-shadow:0 8px 20px rgba(0,0,0,.25);display:none}
 .backdaily.on{display:block}
-body.study-on .backdaily{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+body.study-on .backdaily{left:0;right:0;transform:none;width:100%;max-width:430px;margin:0 auto;border-radius:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));text-align:center;box-shadow:0 -4px 14px rgba(0,0,0,.15)}
+body.study-on.pill-on .sticky-bottom{bottom:calc(44px + env(safe-area-inset-bottom,0px))}
+body.study-on.pill-on #st-body{padding-bottom:70px!important}
 .tlx{position:relative;padding-left:14px;border-left:2px solid var(--line);margin-left:6px}
 .tlx .ev{position:relative;padding:5px 0 7px 10px;font-size:13px;line-height:1.5}
 .tlx .ev::before{content:"";position:absolute;left:-21px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--ec,var(--main));border:2px solid var(--app)}
@@ -260,14 +282,14 @@ body.study-on .backdaily{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
 
   <!-- DAILY (오늘의 문제) -->
   <section class="screen" id="s-daily">
-    <div class="hdr"><button class="ic" onclick="go('home')">←</button><span class="b">오늘의 문제</span><span class="small muted" id="daily-left"></span></div>
+    <div class="hdr"><button class="ic" onclick="goBack()">←</button><span class="b">오늘의 문제</span><span class="small muted" id="daily-left"></span></div>
     <div class="content" id="daily-body" style="padding-bottom:20px"></div>
     <div class="sticky-bottom" id="daily-foot"></div>
   </section>
 
   <!-- CHAPTER -->
   <section class="screen" id="s-ch">
-    <div class="hdr"><button class="ic" onclick="go('home')">←</button><span class="b" id="ch-hdr-title"></span><span style="width:36px"></span></div>
+    <div class="hdr"><button class="ic" onclick="goBack()">←</button><span class="b" id="ch-hdr-title"></span><button class="btn-sm" id="ch-list-btn" onclick="openQList(S.cur)">☰ 목록</button></div>
     <div class="content" id="ch-body"></div>
   </section>
 
@@ -280,7 +302,7 @@ body.study-on .backdaily{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
 
   <!-- RESULT -->
   <section class="screen" id="s-result">
-    <div class="ghdr"><div class="sub" id="rs-sub"></div><h2 id="rs-title"></h2><div class="row" id="rs-row"></div><button class="x" onclick="go(backTo)">✕</button></div>
+    <div class="ghdr"><div class="sub" id="rs-sub"></div><h2 id="rs-title"></h2><div class="row" id="rs-row"></div><button class="x" onclick="goBack()">✕</button></div>
     <div class="content" id="rs-body"></div>
   </section>
 
@@ -304,11 +326,11 @@ body.study-on .backdaily{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
   </section>
 
   <nav class="nav"><div class="in">
-    <button data-n="home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>홈</button>
-    <button data-n="mine" onclick="go('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg>내 학습</button>
-    <button class="center" onclick="quickStart()"><span class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 4l14 8-14 8z"/></svg></span>빠른 학습</button>
-    <button data-n="my" onclick="go('my')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>마이페이지</button>
-    <button data-n="more" onclick="go('more')"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>더보기</button>
+    <button data-n="home" onclick="navGo('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>홈</button>
+    <button data-n="mine" onclick="navGo('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg>내 학습</button>
+    <button class="center" onclick="S.detour=false;quickStart()"><span class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 4l14 8-14 8z"/></svg></span>빠른 학습</button>
+    <button data-n="my" onclick="navGo('my')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>마이페이지</button>
+    <button data-n="more" onclick="navGo('more')"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>더보기</button>
   </div></nav>
 </div>
 <div class="toast" id="toast"></div>
@@ -354,6 +376,7 @@ async function loadGl(){ if (!S.gl) S.gl = await (await fetch('data/glossary.jso
 const $ = s => document.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pad = n => String(n).padStart(2,'0');
+const jsArr = a => '[' + a.map(x => "'"+String(x).replace(/'/g,'')+"'").join(',') + ']';
 const fmtDate = t => { const d = new Date(t); return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`; };
 const fmtTime = t => { const d = new Date(t); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
 const dayKey = t => { const d = new Date(t); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
@@ -366,8 +389,19 @@ function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); 
 function go(name){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 's-'+name));
   document.querySelectorAll('.nav button[data-n]').forEach(b => b.classList.toggle('on', b.dataset.n === name));
-  S.screen = name; closePop(); window.scrollTo(0,0); updateBackDaily();
+  if (S.screen && S.screen!==name && !S._back) { S.hist = S.hist||[]; S.hist.push(S.screen); if (S.hist.length>30) S.hist.shift(); }
+  S._back = false; S.screen = name; closePop(); window.scrollTo(0,0); updateBackDaily();
   if (name==='home') renderHome(); if (name==='mine') renderMine(); if (name==='my') renderMy(); if (name==='more') renderMore();
+}
+function navGo(name){ S.detour = false; S.hist = []; go(name); }
+function goBack(){
+  const h = S.hist || []; let prev = h.pop();
+  while (prev && (prev==='study' || prev==='result' || prev===S.screen)) prev = h.pop();
+  S._back = true;
+  if (!prev) return go('home');
+  if (prev==='daily') return startDaily(false);
+  if (prev==='ch') return S.cur ? openChapter(S.cur) : go('home');
+  go(prev);
 }
 function chInfo(no){ return S.index.chapters.find(c => c.no === no); }
 function chSessions(no){ return sessions.filter(s => s.ch === no); }
@@ -389,7 +423,7 @@ async function renderHome(){
   const due = dueKeys(null).length, wrongN = wrongPool().length;
   const r=36, circ=2*Math.PI*r;
   $('#home-top').innerHTML = `<div class="hero"><div class="ring"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="${r}" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="8"/><circle cx="42" cy="42" r="${r}" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 42 42)"/></svg><div class="pc">${pct}%</div></div>
-    <div class="st">빈칸 <b class="num">${bs}</b>/${totalQ.toLocaleString()} · 동형 기출 <b class="num">${es}</b>/${totalE} · 서술형 <b class="num">${essayN}</b>/${essayT}<br>오늘 <b class="num">${todayN}</b>문항 · 연속 <b class="num">${streak}</b>일<br>복습 대기 <b class="num">${due}</b> · 오답 <b class="num">${wrongN}</b></div></div>
+    <div class="st">빈칸 <b class="num">${bs}</b>/${totalQ.toLocaleString()} · 동형 기출 <b class="num">${es}</b>/${totalE} · 서술형 <b class="num">${essayN}</b>/${essayT}<br>오늘 <b class="num">${todayN}</b>문항 · 연속 <b class="num">${streak}</b>일<br>복습 대기 <b class="num">${due}</b> · 오답 <b class="num">${wrongN}</b>${(()=>{ const pc = paceInfo(); return pc.daysLeft ? `<br>이 속도면 완주까지 약 <b class="num">${pc.daysLeft}</b>일` : ''; })()}</div></div>
     <div class="mainbtns">
       <button class="mb primary" onclick="startDaily(false)"><span><span class="t">${pendingDaily()?'풀던 문제 이어서':'학습하기'}</span><br><span class="d">${pendingDaily()?'오늘의 문제 2문제 중 풀지 않은 것이 있어요':'기출 동형 2문제씩 · 랜덤 + 복습'}</span></span><span style="font-size:26px">▶</span></button>
       <button class="mb o" onclick="startSession({mode:'review'})"><span class="t">복습하기</span><span class="d">복습 예정 ${due}문항 (빈칸+동형 기출)</span></button>
@@ -438,7 +472,7 @@ function sessRow(s){
   const on = s.status==='progress';
   return `<div class="it" onclick="${on?`resumeSession('${s.id}')`:`openResult('${s.id}')`}"><div class="tm">${fmtTime(s.start)}</div><div class="box ${on?'on':''}"><div class="n">${s.ch?pad(s.ch)+'. '+esc(chInfo(s.ch).title)+' · ':''}${modeName(s.mode)}</div>${on?`<div class="small">현재 채점 대기 중</div>`:`<div class="row small" style="margin-top:4px"><span class="chip b">정답</span>${s.correct}문항 <span class="chip o">오답</span>${s.wrong}문항</div>`}</div><div class="badge ${on?'prog':'done'}">${on?'채점중':'채점<br>완료'}</div></div>`;
 }
-const modeName = m => ({byul:'빈칸 채우기', study:'학습(새 문항+복습)', exam:'기출 동형', retry:'오답 다시 풀기', review:'복습', daily:'오늘의 문제'})[m] || m;
+const modeName = m => ({byul:'빈칸 채우기', study:'학습(새 문항+복습)', exam:'기출 동형', retry:'오답 다시 풀기', pick:'선택 문항', review:'복습', daily:'오늘의 문제'})[m] || m;
 
 /* ---------- SESSIONS (말해보카식 간격 반복) ---------- */
 const LV = [10*60e3, 864e5, 3*864e5, 7*864e5, 14*864e5, 30*864e5, 60*864e5, 120*864e5];
@@ -457,7 +491,7 @@ async function startSession(opts){
   const o = typeof opts === 'number' ? {ch:opts, mode:'study'} : opts; const mode = o.mode || 'study';
   let keys = [], ch = o.ch || null;
   if (mode === 'exam') { const d = await loadCh(ch); keys = d.exam.map(e => e.id); }
-  else if (mode === 'retry') { keys = o.keys; }
+  else if (mode === 'retry' || mode === 'pick') { keys = o.keys; }
   else if (mode === 'review') { keys = dueKeys(null).slice(0, 20); if (!keys.length) { toast('지금 복습할 문항이 없습니다. 학습을 먼저 해 보세요.'); return; } ch = parseKey(keys[0]).ch; }
   else {
     const chs = ch ? [ch] : READY().map(c=>c.no); for (const c of chs) await loadCh(c);
@@ -473,7 +507,7 @@ async function startSession(opts){
   persist(s); S.sess = s; nextItem();
 }
 async function resumeSession(id){ const s = sessions.find(x => x.id===id); if (!s) return; if (!s.queue) { s.queue = s.items.filter(k => !s.checked[k]); } for (const k of new Set(s.items.map(k => parseKey(k).ch))) await loadCh(k); S.sess = s; if (s.cur && !s.checked[s.cur]) renderStudy(); else nextItem(); }
-function leaveStudy(){ const s = S.sess; if (s.status==='progress' && !Object.keys(s.checked).length) { sessions = sessions.filter(x => x.id !== s.id); saveLocal(); if (DB && UID) DB.doc('data/users/'+UID+'/'+s.id).delete().catch(()=>{}); } else persist(s); go('mine'); }
+function leaveStudy(){ const s = S.sess; if (s.status==='progress' && !Object.keys(s.checked).length) { sessions = sessions.filter(x => x.id !== s.id); saveLocal(); if (DB && UID) DB.doc('data/users/'+UID+'/'+s.id).delete().catch(()=>{}); } else persist(s); document.body.classList.remove('study-on'); goBack(); }
 function nextItem(){ const s = S.sess; if (!s.queue.length) { doFinish(); return; } s.cur = s.queue[0]; s.bi = 0; s.attempts[s.cur] = (s.attempts[s.cur]||0); if (s.attempts[s.cur] > 0 || s.mode!=='exam') { delete s.checked[s.cur]; s.answers[s.cur] = []; } persist(s); renderStudy(); }
 function recordResult(key, ok){
   const s = S.sess, now = Date.now(); s.attempts[key] = (s.attempts[key]||0) + 1;
@@ -484,7 +518,7 @@ function recordResult(key, ok){
   persist(s);
 }
 function srsUpdate(key, ok){
-  const now = Date.now(); const p = PROG[key] || { lv:0, seen:0, ok:0, ng:0, due:0, last:0 };
+  const now = Date.now(); const p = PROG[key] || { lv:0, seen:0, ok:0, ng:0, due:0, last:0, first:now };
   const wasNew = !PROG[key]; p.seen++; if (ok) { p.ok++; p.lv = Math.min(LV.length-1, (wasNew ? 1 : p.lv + 1)); } else { p.ng++; p.lv = 0; }
   p.lastOk = ok; p.last = now; p.due = now + LV[p.lv]; p.prev = PROG[key] ? PROG[key].last : 0; PROG[key] = p; saveProg();
 }
@@ -503,20 +537,41 @@ function highlight(text, d, kws, key, locked){
   while ((m = re.exec(text))) { out += esc(text.slice(last, m.index)); out += locked ? `<span class="kw lock" onclick="event.stopPropagation();toast('문제를 풀고 나면 키워드를 볼 수 있어요')">${esc(m[0])}</span>` : `<span class="kw" onclick="showTerm(event,'${esc(m[0]).replace(/'/g,"\\'")}',${key?`'${key}'`:'null'})">${esc(m[0])}</span>`; last = m.index + m[0].length; }
   return out + esc(text.slice(last));
 }
+const ALLKW = () => { try { return localStorage.getItem('onnuri.allkw') !== '0'; } catch(e) { return true; } };
+function qText(q){
+  if (!ALLKW() || !q.kw || !q.kw.length) return q.text;
+  if (q._ext !== undefined) return q._ext;
+  const parts = q.text.split(/(\{\{.+?\}\})/);
+  const kws = [...q.kw].filter(k => k.length >= 2 && k.length <= 9 && /^[가-힣·\s]+$/.test(k)).sort((a,b) => b.length - a.length);
+  const done = new Set();
+  const out = parts.map(p => {
+    if (/^\{\{.+?\}\}$/.test(p)) return p;
+    let seg = p;
+    for (const k of kws) {
+      if (done.has(k)) continue;
+      const i = seg.indexOf(k); if (i < 0) continue;
+      const before = seg.slice(0, i); if ((before.match(/\{\{/g)||[]).length !== (before.match(/\}\}/g)||[]).length) continue;
+      seg = before + '{{' + k + '}}' + seg.slice(i + k.length); done.add(k);
+    }
+    return seg;
+  }).join('');
+  q._ext = out; return out;
+}
+function clearExt(){ for (const no in S.ch) S.ch[no].q.forEach(q => { delete q._ext; }); }
 function blanksOf(text){ const out=[]; text.replace(/\{\{(.+?)\}\}/g, (m,a)=>{ out.push(a); return m; }); return out; }
 function normAns(s){ return String(s||'').trim().replace(/\s+/g,'').replace(/[·.]/g,'.'); }
 function resolve(key){ const p = parseKey(key); const d = S.ch[p.ch]; if (!d) return null; return p.exam ? {d, e:d.exam.find(x=>x.id===key), p} : {d, q:d.q.find(x=>x.n===p.n), p}; }
 /* sentence with blanks: done → graded spans; live → current blank highlighted */
 function sentenceHtml(key, s, live){
-  const {d,q} = resolve(key); const parts = q.text.split(/(\{\{.+?\}\})/); const answers = blanksOf(q.text); let bi = 0;
+  const {d,q} = resolve(key); const parts = qText(q).split(/(\{\{.+?\}\})/); const answers = blanksOf(qText(q)); let bi = 0;
   const checked = s.checked[key], given = s.answers[key] || [];
   return parts.map(p => {
     const m = p.match(/^\{\{(.+?)\}\}$/);
     if (!m) return highlight(p, d, q.kw, key);
     const i = bi++, a = answers[i], g = given[i] || '';
     if (checked) { const ok = normAns(g)===normAns(a); return `<span class="blank ${ok?'ok':'no'}">${esc(g||'　')}</span>${ok?'':`<span class="ans">${esc(a)}</span>`}`; }
-    if (live) { if (i < s.bi) return `<span class="blank ok" style="color:var(--fg)">${esc(g)}</span>`; if (i === s.bi) return `<span class="blank cur" id="curblank">${esc(g) || '○'.repeat(a.length)}</span>`; return `<span class="blank dim">${'○'.repeat(a.length)}</span>`; }
-    return `<span class="blank">${'○'.repeat(a.length)}</span>`;
+    if (live) { if (i < s.bi) return `<span class="blank ok" style="color:var(--fg)">${esc(g)}</span>`; if (i === s.bi) return `<span class="blank cur" id="curblank">${esc(g) || '○'.repeat(a.replace(/\s/g,'').length)}</span>`; return `<span class="blank dim">${'○'.repeat(a.replace(/\s/g,'').length)}</span>`; }
+    return `<span class="blank">${'○'.repeat(a.replace(/\s/g,'').length)}</span>`;
   }).join('');
 }
 function qInfoHtml(key, masked){
@@ -543,7 +598,7 @@ function renderStudy(){
   document.body.classList.add('study-on');
   const body = $('#st-body');
   if (r.p.exam) { body.innerHTML = examCard(r.e, d, s); $('#st-foot').innerHTML = s.checked[key] ? `<button class="pill-btn" style="flex:1" onclick="afterItem()">다음 →</button>` : `<button class="pill-btn ghost" style="flex:1" onclick="checkEx('${key}')">확인</button>`; go('study'); return; }
-  const q = r.q, answers = blanksOf(q.text), p = PROG[key], checked = s.checked[key];
+  const q = r.q, answers = blanksOf(qText(q)), p = PROG[key], checked = s.checked[key];
   const tries = s.attempts[key] || 0;
   const tag = p && p.seen ? `<span class="chip lg">복습 · ${humanGap(Date.now() - p.last)} 만에</span><span class="chip gray">${p.ok}승 ${p.ng}패 · 단계 ${p.lv}</span>` : `<span class="chip lb">새 문항</span>`;
   const again = tries ? `<span class="chip lo">${tries+1}번째 시도</span>` : '';
@@ -555,7 +610,7 @@ function renderStudy(){
     h += `<div class="row" style="margin-top:12px"><button class="pill-btn ghost" style="flex:1" onclick="toggleInfo('${key}')">정보</button><button class="pill-btn" style="flex:1.4" onclick="afterItem()">다음 →</button></div><div id="info-${key}" hidden>${qInfoHtml(key, null)}</div></div>`;
   } else {
     const a = answers[s.bi];
-    h += `<div class="word"><div class="wl">빈칸 ${s.bi+1}/${answers.length} · ${a.length}글자</div><input id="win" class="win" autocomplete="off" autocapitalize="off" enterkeyhint="${s.bi+1<answers.length?'next':'done'}" placeholder="${'○'.repeat(a.length)}" maxlength="${a.length+3}" value="${esc((s.answers[key]||[])[s.bi]||'')}" oninput="liveType(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();submitBlank()}"></div>
+    h += `<div class="word"><div class="wl">빈칸 ${s.bi+1}/${answers.length} · ${a.replace(/\s/g,'').length}글자</div><input id="win" class="win" autocomplete="off" autocapitalize="off" enterkeyhint="${s.bi+1<answers.length?'next':'done'}" placeholder="${'○'.repeat(a.replace(/\s/g,'').length)}" maxlength="${a.length+3}" value="${esc((s.answers[key]||[])[s.bi]||'')}" oninput="liveType(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();submitBlank()}"></div>
       <div class="row" style="margin-top:12px"><button class="pill-btn ghost" style="flex:1" onclick="giveUp()">모르겠어요</button><button class="pill-btn" style="flex:1.4" onclick="submitBlank()">${s.bi+1<answers.length?'다음 빈칸':'제출'}</button></div>
       <div class="small muted" style="text-align:center;margin-top:8px">정보 버튼은 제출 후에 열립니다 · 키워드(파란 밑줄)는 지금도 볼 수 있어요</div></div>`;
   }
@@ -563,16 +618,16 @@ function renderStudy(){
   go('study');
   if (!checked) setTimeout(()=>{ const w=$('#win'); if (w) { w.focus(); } }, 60);
 }
-function liveType(v){ const s=S.sess, key=s.cur; (s.answers[key] ||= [])[s.bi] = v; const cb=$('#curblank'); if (cb) cb.textContent = v || '○'.repeat(blanksOf(resolve(key).q.text)[s.bi].length); }
+function liveType(v){ const s=S.sess, key=s.cur; (s.answers[key] ||= [])[s.bi] = v; const cb=$('#curblank'); if (cb) cb.textContent = v || '○'.repeat(blanksOf(qText(resolve(key).q))[s.bi].replace(/\s/g,'').length); }
 function submitBlank(){
-  const s=S.sess, key=s.cur, answers=blanksOf(resolve(key).q.text); const v = ($('#win')?.value||'').trim();
+  const s=S.sess, key=s.cur, answers=blanksOf(qText(resolve(key).q)); const v = ($('#win')?.value||'').trim();
   if (!v) { $('#win')?.focus(); return; }
   (s.answers[key] ||= [])[s.bi] = v;
   if (s.bi+1 < answers.length) { s.bi++; persist(s); renderStudy(); return; }
   const given = s.answers[key]; const ok = answers.every((a,i)=>normAns(given[i])===normAns(a));
   recordResult(key, ok); renderStudy();
 }
-function giveUp(){ const s=S.sess, key=s.cur; s.answers[key] = blanksOf(resolve(key).q.text).map(()=>''); recordResult(key, false); renderStudy(); }
+function giveUp(){ const s=S.sess, key=s.cur; s.answers[key] = blanksOf(qText(resolve(key).q)).map(()=>''); recordResult(key, false); renderStudy(); }
 function afterItem(){ closePop(); nextItem(); }
 function toggleInfo(k){ const el = document.getElementById('info-'+k); if (!el) return; el.hidden = !el.hidden; if (!el.hidden && S.sess && !S.sess.checked[k]) toast('정답 부분은 제출 후 공개됩니다'); }
 function recount(s){ const r = Object.values(s.results); s.correct = r.filter(Boolean).length; s.wrong = r.length - s.correct; }
@@ -586,7 +641,7 @@ function examCard(e, d, s, num){
     <div class="stem">${highlight(e.stem, d, e.kw, null, L)}</div>${mat}${imgs.length?`<div class="gal">${imgs.map((im,i)=>figure(im,e.img[i],d.no,L)).join('')}</div>`:''}
     ${checked?`<div class="expl"><h5>자료 해설</h5>${esc(e.expl)}</div>`:''}
     <div>${e.options.map((o,i)=>{ const n=i+1; let cls=''; if (checked){ if (n===e.answer) cls='right'; else if (n===sel) cls='wrong'; } else if (n===sel) cls='sel'; return `<div class="opt ${cls}" onclick="${checked?'':`pick('${e.id}',${n})`}"><span class="c">${'①②③④⑤'[i]}</span><span>${highlight(o, d, e.kw, null, L)}</span></div>${checked&&e.optx&&e.optx[i]?`<div class="optx ${n===e.answer?'right':''}">${esc(e.optx[i])}</div>`:''}`; }).join('')}</div>
-    <div class="acts">${checked?`<span class="chip ${s.results[e.id]?'lb':'lo'}">${s.results[e.id]?'정답':'오답'}</span>`:`<button class="btn-sm on" onclick="checkEx('${e.id}')">확인</button>`}<span class="sp"></span><button class="btn-sm" onclick="openChapter(${d.no})">학습하기 · ${pad(d.no)}강</button><button class="btn-sm" onclick="toggleInfo('${e.id}')">정보 ${checked?'':'🔒'}</button></div>
+    <div class="acts">${checked?`<span class="chip ${s.results[e.id]?'lb':'lo'}">${s.results[e.id]?'정답':'오답'}</span>`:`<button class="btn-sm on" onclick="checkEx('${e.id}')">확인</button>`}<span class="sp"></span><button class="btn-sm" onclick="studyChoice('${e.id}')">학습하기 · ${pad(d.no)}강</button><button class="btn-sm" onclick="toggleInfo('${e.id}')">정보 ${checked?'':'🔒'}</button></div>
     <div id="info-${e.id}" hidden>${checked?exInfoHtml(e, d):`<div class="info"><div class="muted">문제를 풀면 해설·관련 정보가 열립니다.</div></div>`}</div></div>`;
 }
 function exInfoHtml(e, d){
@@ -614,9 +669,9 @@ function dailySession(){ const id = 'daily-'+dayKey(Date.now()); let s = session
 function loadDailyRound(){ try { const r = JSON.parse(localStorage.getItem('onnuri.daily')||'null'); return (r && r.d===dayKey(Date.now()) && Array.isArray(r.keys)) ? r.keys : null; } catch(e) { return null; } }
 function saveDailyRound(keys){ try { localStorage.setItem('onnuri.daily', JSON.stringify({d:dayKey(Date.now()), keys})); } catch(e){} }
 function pendingDaily(){ const keys = loadDailyRound(); if (!keys) return false; const s = sessions.find(x=>x.id==='daily-'+dayKey(Date.now())); return keys.some(k => !(s && s.checked[k])); }
-function updateBackDaily(){ const el = $('#backdaily'); if (el) el.classList.toggle('on', S.screen!=='daily' && S.screen!=='home' && pendingDaily()); }
+function updateBackDaily(){ const el = $('#backdaily'); const on = !!S.detour && S.screen!=='daily' && S.screen!=='home'; if (el) el.classList.toggle('on', on); document.body.classList.toggle('pill-on', on); }
 async function startDaily(fresh){
-  await loadIndex(); const all = await loadExamAll(); const s = dailySession(); S.sess = s;
+  S.detour = false; await loadIndex(); const all = await loadExamAll(); const s = dailySession(); S.sess = s;
   if (!fresh) { const keys = loadDailyRound(); if (keys && keys.some(k => !s.checked[k]) && keys.every(k => all.some(x=>x.id===k))) { S.daily = keys; for (const k of keys) await loadCh(parseKey(k).ch); renderDaily(); return; } }
   const now = Date.now(); const ids = all.map(x=>x.id);
   const due = ids.filter(k => PROG[k] && PROG[k].due <= now && !s.checked[k]).sort((a,b)=>PROG[a].due-PROG[b].due);
@@ -631,10 +686,12 @@ async function startDaily(fresh){
 function renderDaily(){
   const s = S.sess; const all = S.examAll; const seen = examSeen();
   $('#daily-left').textContent = `${all.length - seen}문제 남음`;
-  $('#daily-body').innerHTML = S.daily.map((k,i) => { const r = resolve(k); return `<div class="daily-card" data-k="${k}">${examCard(r.e, r.d, s, i+1).replace('<div class="q ex"', '<div class="q ex" data-num="'+(i+1)+'"')}</div>`; }).join('');
+  $('#daily-body').innerHTML = S.daily.map((k,i) => { const r = resolve(k); return `<div class="daily-card" data-k="${k}">${examCard(r.e, r.d, s, i+1).replace('<div class="q ex"', '<div class="q ex" data-num="'+(i+1)+'"')}</div>`; }).join('') + `<div class="daily-next" id="daily-next"></div>`;
   dailyFoot(); go('daily');
 }
-function dailyFoot(){ const s=S.sess; const left = S.daily.filter(k=>!s.checked[k]).length; $('#daily-foot').innerHTML = `<div class="small muted" style="flex:1;align-self:center">오늘 ${s.correct+s.wrong}문제 · 정답 ${s.correct}</div><button class="pill-btn ${left?'ghost':''}" style="flex:1.2" onclick="${left?`showConfirm('아직 ${left}문제를 풀지 않았습니다. 다음으로 넘어갈까요?', ()=>startDaily(true))`:'startDaily(true)'}">다음 학습 →</button>`; }
+function dailyFoot(){ const s=S.sess; const left = S.daily.filter(k=>!s.checked[k]).length; const btn = `<button class="pill-btn ${left?'ghost':''}" style="flex:1.2" onclick="${left?`showConfirm('아직 ${left}문제를 풀지 않았습니다. 다음으로 넘어갈까요?', ()=>startDaily(true))`:'startDaily(true)'}">다음 문제 → <span class="small" style="font-weight:500">(2문제)</span></button>`;
+  $('#daily-foot').innerHTML = `<div class="small muted" style="flex:1;align-self:center">오늘 ${s.correct+s.wrong}문제 · 정답 ${s.correct}</div>${btn}`;
+  const nx = $('#daily-next'); if (nx) nx.innerHTML = left ? `<div class="small muted">${left}문제를 더 풀면 다음 문제로 넘어갈 수 있어요</div>` : `${btn}<div class="small muted" style="margin-top:6px">오늘 ${s.correct+s.wrong}문제 풀이 · 정답 ${s.correct} · 남은 동형 기출 ${S.examAll.length - examSeen()}문제</div>`; }
 /* ---------- RESULT ---------- */
 function qCardResult(key, s){
   const r = resolve(key); if (!r) return ''; const q = r.q; const ok = s.results[key];
@@ -651,7 +708,7 @@ async function openResult(id){
   const wrongKeys = s.items.filter(i => !s.results[i]);
   $('#rs-body').innerHTML = `<div class="row" style="padding:12px 0 4px"><span class="pct">정답률 ${Math.round(100*s.correct/Math.max(1,s.total))}%</span><span class="small muted">첫 시도 기준 · ○ 정답 · ✕ 오답(정답 표시)</span></div>` +
     s.items.map(k => parseKey(k).exam ? examCard(resolve(k).e, resolve(k).d, s) : qCardResult(k, s)).join('') +
-    `<div style="display:flex;gap:8px;margin-top:16px">${wrongKeys.length && s.mode!=='exam' ? `<button class="pill-btn o" onclick="startSession({mode:'retry',keys:${JSON.stringify(wrongKeys)}})">오답 ${wrongKeys.length}문항 다시 풀기</button>`:''}<button class="pill-btn ghost" onclick="${s.ch?`openChapter(${s.ch})`:`go('home')`}">${s.ch?'단원으로':'홈으로'}</button></div>`;
+    `<div style="display:flex;gap:8px;margin-top:16px">${wrongKeys.length && s.mode!=='exam' ? `<button class="pill-btn o" onclick="startSession({mode:'retry',keys:${jsArr(wrongKeys)}})">오답 ${wrongKeys.length}문항 다시 풀기</button>`:''}<button class="pill-btn ghost" onclick="${s.ch?`openChapter(${s.ch})`:`go('home')`}">${s.ch?'단원으로':'홈으로'}</button></div>`;
   document.body.classList.remove('study-on'); go('result');
 }
 
@@ -689,7 +746,7 @@ function wrongHtml(){
   const byCh = {}; pool.forEach(x=>(byCh[x.ch] ||= []).push(x.key));
   const chs = Object.keys(byCh).map(Number).sort((a,b)=>a-b);
   if (!chs.length) return `<div class="empty">오답이 없습니다. 🎉</div>`;
-  return `<div style="padding-top:10px">${chs.map(ch=>{ const c=chInfo(ch); const seen=learnedCount(ch); const rate=Math.round(100*byCh[ch].length/Math.max(seen,1)); return `<div class="scard" onclick="startSession({mode:'retry',keys:${JSON.stringify(byCh[ch])}})">${thumb(ch,c.era)}<div class="t"><div class="n">${pad(ch)}강 ${esc(c.title)}</div><div class="m">${c.nq}문항 중 <span class="hl">${seen}</span>문항 학습</div><div class="row small" style="margin-top:3px"><span class="chip o">오답</span>${byCh[ch].length}문항</div></div><div style="text-align:right;flex:none"><div class="small muted">오답률</div><div class="b" style="color:var(--orange);font-size:16px">${rate}%</div></div></div>`; }).join('')}</div>
+  return `<div style="padding-top:10px">${chs.map(ch=>{ const c=chInfo(ch); const seen=learnedCount(ch); const rate=Math.round(100*byCh[ch].length/Math.max(seen,1)); return `<div class="scard" onclick="startSession({mode:'retry',keys:${jsArr(byCh[ch])}})">${thumb(ch,c.era)}<div class="t"><div class="n">${pad(ch)}강 ${esc(c.title)}</div><div class="m">${c.nq}문항 중 <span class="hl">${seen}</span>문항 학습</div><div class="row small" style="margin-top:3px"><span class="chip o">오답</span>${byCh[ch].length}문항</div></div><div style="text-align:right;flex:none"><div class="small muted">오답률</div><div class="b" style="color:var(--orange);font-size:16px">${rate}%</div></div></div>`; }).join('')}</div>
   <div style="margin-top:16px"><button class="pill-btn" onclick="retryAllWrong()">오답 전체 다시 풀기 (${pool.length})</button><div class="small muted" style="text-align:center;margin-top:6px">ⓘ 강별로 누르면 그 강의 오답만 다시 풉니다.</div></div>`;
 }
 function retryAllWrong(){ const pool = wrongPool(); if (!pool.length) return; startSession({mode:'retry', keys:pool.map(x=>x.key)}); }
@@ -730,15 +787,37 @@ function openCal(){
 }
 
 /* ---------- MY PAGE / MORE ---------- */
+function paceInfo(){
+  const now = Date.now(), DAY = 864e5; const totalE = READY().reduce((a,c)=>a+c.ne,0); const totalAll = TOTAL_Q() + totalE;
+  const learned = Object.keys(PROG).filter(k => { const p = parseKey(k); return chInfo(p.ch) && chInfo(p.ch).ready; }).length;
+  const firsts = Object.values(PROG).map(p => p.first || p.last).filter(Boolean);
+  const win = 7; const recent = firsts.filter(t => t > now - win*DAY).length;
+  const activeDays = new Set(firsts.filter(t => t > now - win*DAY).map(t => dayKey(t))).size;
+  const perDay = recent / win; const perActive = activeDays ? recent / activeDays : 0;
+  const remain = Math.max(0, totalAll - learned);
+  return { totalAll, learned, remain, perDay, perActive, recent, daysLeft: perDay > 0 ? Math.ceil(remain / perDay) : null, daysLeftActive: perActive > 0 ? Math.ceil(remain / perActive) : null };
+}
 function renderMy(){
   if (!S.index) return loadIndex().then(renderMy);
   const done = sessions.filter(s=>s.status==='done'); const tot = done.reduce((a,s)=>a+s.total,0), cor = done.reduce((a,s)=>a+s.correct,0);
   const days = new Set(done.map(s=>dayKey(s.start))).size;
-  const covered = READY().reduce((a,c)=>a+learnedCount(c.no),0);
+  const covered = READY().reduce((a,c)=>a+learnedCount(c.no),0); const es = examSeen(); const totalE = READY().reduce((a,c)=>a+c.ne,0);
+  const wk = [...Array(7)].map((_,i)=>{ const d=new Date(); d.setDate(d.getDate()-6+i); const k=dayKey(d); const n = done.filter(s=>dayKey(s.start)===k).reduce((a,s)=>a+s.correct+s.wrong,0); return {d, n}; });
+  const mx = Math.max(1, ...wk.map(x=>x.n));
+  const pc = paceInfo();
+  const eras = S.index.eras.map(e => { const chs = READY().filter(c=>c.era===e); const l = chs.reduce((a,c)=>a+learnedCount(c.no),0), t = chs.reduce((a,c)=>a+c.nq,0); return {e, chs, l, t}; }).filter(x => x.chs.length);
+  const bar = (l,t,label,sub) => `<div class="prow"><span class="pl">${label}</span><div class="pb"><i style="width:${t?Math.round(100*l/t):0}%"></i></div><span class="pv num">${l} / ${t}</span></div>${sub||''}`;
   $('#my-body').innerHTML = `<div class="row" style="padding:16px 0"><div class="thumb" style="width:56px;height:56px;border-radius:50%;background:var(--main);display:grid;place-items:center;color:#fff;font-weight:900;font-size:20px">世</div><div><div class="b" style="font-size:16px">세계사능력검정 1급 준비생</div><div class="small muted">${DB?'학습 기록: 계정에 동기화 중':'학습 기록: 이 기기에 저장'}</div></div></div>
-    <div class="grid2"><div class="stat"><div class="v num">${covered}<span class="small" style="font-weight:400"> / ${TOTAL_Q().toLocaleString()}</span></div><div class="k">학습한 문항</div></div><div class="stat"><div class="v num">${tot?Math.round(100*cor/tot):0}%</div><div class="k">누적 정답률</div></div><div class="stat"><div class="v num">${done.length}</div><div class="k">채점 횟수</div></div><div class="stat"><div class="v num">${days}</div><div class="k">학습일</div></div></div>
+    <div class="grid2"><div class="stat"><div class="v num">${covered}<span class="small" style="font-weight:400"> / ${TOTAL_Q().toLocaleString()}</span></div><div class="k">빈칸 학습</div></div><div class="stat"><div class="v num">${es}<span class="small" style="font-weight:400"> / ${totalE}</span></div><div class="k">동형 기출 학습</div></div><div class="stat"><div class="v num">${tot?Math.round(100*cor/tot):0}%</div><div class="k">누적 정답률</div></div><div class="stat"><div class="v num">${days}</div><div class="k">학습일</div></div></div>
+    <div class="card" style="margin-top:12px"><div class="sect" style="margin:0 0 8px">완주 예상 <span class="small muted">공개된 ${READY().length}개 강 기준</span></div>
+      ${pc.daysLeft ? `<div style="font-size:15px">이 속도면 전체 <b>${pc.totalAll.toLocaleString()}</b>문항 암기까지 <b class="hl" style="font-size:20px">약 ${pc.daysLeft}일</b></div><div class="small muted" style="margin-top:4px">최근 7일 하루 평균 ${pc.perDay.toFixed(1)}문항 (학습한 날 기준 ${pc.perActive.toFixed(1)}문항 → ${pc.daysLeftActive}일) · 남은 문항 ${pc.remain.toLocaleString()}</div>` : `<div class="small muted">최근 7일 동안 새로 학습한 문항이 있으면 완주까지 걸리는 날짜를 계산해 드립니다. 남은 문항 ${pc.remain.toLocaleString()}</div>`}</div>
+    <div class="card" style="margin-top:12px"><div class="sect" style="margin:0 0 6px">최근 7일 <span class="small muted">푼 문항 수</span></div>
+      <div class="bars7">${wk.map(x=>`<div class="b7"><span class="v">${x.n||''}</span><i style="height:${Math.max(4, Math.round(90*x.n/mx))}px" class="${x.n?'':'none'}"></i><span class="d">${'일월화수목금토'[x.d.getDay()]}</span></div>`).join('')}</div></div>
+    <div class="card" style="margin-top:12px"><div class="sect" style="margin:0 0 6px">파트별 익힌 문항 <span class="small muted">누르면 강별로 펼침</span></div>
+      ${eras.map((x,i)=>`<div class="era-row" onclick="const t=this.nextElementSibling;t.hidden=!t.hidden">${bar(x.l,x.t,x.e)}</div><div hidden style="padding:2px 0 8px 10px;border-left:2px solid var(--line);margin-left:6px">${x.chs.map(c=>bar(learnedCount(c.no),c.nq,`<span class="small">${pad(c.no)} ${esc(c.title)}</span>`)).join('')}</div>`).join('')}</div>
     <div class="sect">학습 설정</div>
-    <div class="card"><div class="kv"><span>한 번에 새 문항</span><span class="row">${[5,10,15,20].map(n=>`<button class="btn-sm ${NEW_PER()===n?'on':''}" onclick="try{localStorage.setItem('onnuri.newper','${n}')}catch(e){};renderMy()">${n}</button>`).join('')}</span></div><div class="small muted">복습 간격: 10분 → 1일 → 3일 → 7일 → 14일 → 30일 → 60일 → 120일. 틀리면 처음으로 돌아가고, 같은 학습 안에서 잠시 후 다시 나옵니다.</div></div>
+    <div class="card"><div class="kv"><span>한 번에 새 문항</span><span class="row">${[5,10,15,20].map(n=>`<button class="btn-sm ${NEW_PER()===n?'on':''}" onclick="try{localStorage.setItem('onnuri.newper','${n}')}catch(e){};renderMy()">${n}</button>`).join('')}</span></div><div class="kv"><span>키워드 전부 빈칸으로</span><span class="row"><button class="btn-sm ${ALLKW()?'on':''}" onclick="try{localStorage.setItem('onnuri.allkw','1')}catch(e){};clearExt();renderMy()">켬</button><button class="btn-sm ${ALLKW()?'':'on'}" onclick="try{localStorage.setItem('onnuri.allkw','0')}catch(e){};clearExt();renderMy()">끔</button></span></div>
+      <div class="small muted">켜면 문장 속 말풍선 키워드도 모두 빈칸이 됩니다. 복습 간격: 10분 → 1일 → 3일 → 7일 → 14일 → 30일 → 60일 → 120일. 틀리면 처음으로 돌아가고, 같은 학습 안에서 잠시 후 다시 나옵니다.</div></div>
     ${('serviceWorker' in navigator && !/claude\.ai$/.test(location.hostname)) ? `<div class="sect">오프라인</div><div class="card"><button class="pill-btn" id="offbtn" onclick="offlineAll()">${(()=>{try{return localStorage.getItem('onnuri.offline')==='1'}catch(e){return false}})()?'오프라인 저장 완료 ✓ (다시 받기)':'전체 내용 오프라인 저장'}</button><div class="small muted" style="margin-top:6px">홈 화면에 추가한 뒤 한 번 눌러 두면 인터넷 없이도 모든 문항·사진·필기를 볼 수 있습니다.</div></div>` : ''}
     <div class="sect">학습 데이터</div>
     <div class="card"><div class="kv" style="cursor:pointer" onclick="exportData()"><span>기록 복사 (백업용 JSON)</span><span class="muted">›</span></div><div class="kv" style="cursor:pointer" onclick="importData()"><span>기록 붙여넣기 (복원)</span><span class="muted">›</span></div><div class="kv" style="cursor:pointer;color:var(--red)" onclick="showConfirm('모든 채점 기록을 삭제할까요? 되돌릴 수 없습니다.',resetData)"><span>기록 전체 삭제</span><span class="muted">›</span></div></div>
@@ -760,6 +839,49 @@ function renderMore(){ if (!S.index) return loadIndex().then(renderMore);
     <div class="sect">사용법</div><div class="card small" style="line-height:1.8">· <b>세계사 연표</b>: 모든 강의 흐름 연표를 한 줄로 합쳐 동·서양을 같은 시기끼리 비교합니다. <b>순서 맞추기</b>는 사건 4개를 오래된 순서로 누르는 연습입니다.<br>· <b>서술형 대비</b>: 47~50번 주관식은 용어 1~2개짜리 한 문장이 답입니다. 답안을 가린 채 떠올린 뒤 채점 포인트를 체크하고, 다 외우면 '외웠어요'를 누르세요.<br>· 문항이 한 번에 하나씩 나옵니다. 빈칸을 입력하고 <b>제출</b>(Enter)하면 즉시 채점되고, 틀린 문항은 같은 학습에서 잠시 후 다시 나옵니다. 학습이 끝나면 채점 리스트에 기록됩니다.<br>· <b>학습 시작</b>은 복습 예정 문항을 먼저, 새 문항을 사이사이에 섞어 냅니다(복습 2 : 새 문항 1).<br>· 지문의 <span class="kw">초록 밑줄 키워드</span>를 누르면 정의·배경·의의·파생 효과 말풍선이 뜹니다.<br>· <b>정보</b> 버튼: 요약·관련 정보·사진·지도. 정답이 드러나는 부분은 확인 전까지 ○○로 가려집니다.<br>· 오답은 오답노트에 모이고, 다시 풀어 맞히면 오답개선율에 반영됩니다.</div>`;
 }
 
+/* ---------- 문항 목록 / 관련 문항 ---------- */
+async function loadQIndex(){ if (!S.qidx) S.qidx = await (await fetch('data/qindex.json')).json(); return S.qidx; }
+const GENERIC = new Set(['중국','일본','인도','로마','그리스','이집트','유럽','아시아','아프리카','미국','영국','프랑스','독일','러시아','왕','황제','제국','왕조','국가','정부','시대','백성','농민','사건','문화','정치','경제','사회','조약','개혁','운동','전쟁','교육','종교','불교','유교','이슬람교','크리스트교','학교','군대','수도','지방','중앙','제도','문명','도시','상인','귀족','민족','혁명']);
+async function relatedQ(e, d){
+  const qidx = await loadQIndex(); const G = await loadGl();
+  const etext = [e.stem, e.material||'', ...(e.options||[])].join(' ');
+  const terms = new Map();
+  const add = (t, w) => { if (!t || t.length < 2 || GENERIC.has(t)) return; terms.set(t, Math.max(terms.get(t)||0, w)); };
+  e.kw.forEach(k => { add(k, 3); for (const a in d.alias) if (d.alias[a]===k) add(a, 3); const t = d.alias[k]||k; add(t, 3); });
+  for (const t in G.g) if (t.length >= 2 && etext.includes(t)) add(t, t.length >= 3 ? 2 : 1);
+  for (const a in G.alias) if (a.length >= 3 && etext.includes(a)) add(a, 2);
+  const scored = qidx.map(b => { let sc = 0; terms.forEach((w, t) => { if (b.t.includes(t)) sc += w; }); if (sc && b.ch === d.no) sc += 1; return {b, sc}; }).filter(x => x.sc >= 2).sort((a,b) => b.sc - a.sc || a.b.ch - b.b.ch || a.b.n - b.b.n);
+  return scored.slice(0, 14).map(x => x.b.k);
+}
+async function studyChoice(eid){
+  const r = resolve(eid); if (!r) return; S.detour = (S.screen === 'daily'); const d = r.d, e = r.e; toast('관련 문항 찾는 중…'); const rel = await relatedQ(e, d);
+  const chs = [...new Set(rel.map(k => parseKey(k).ch))];
+  overlay(`<div class="b" style="font-size:16px;margin-bottom:4px">${pad(d.no)}강 ${esc(d.title)}</div><div class="small muted" style="margin-bottom:12px">지문·선지에 나온 내용과 관련된 빈칸 문항 ${rel.length}개를 찾았습니다${chs.length>1?` (${chs.map(c=>c+'강').join('·')})`:''}.</div>
+    <div style="display:grid;gap:8px">
+      <button class="pill-btn" ${rel.length?'':'disabled style="opacity:.5"'} onclick="closeOv();openChapter(${d.no}).then(()=>openRelList(${jsArr(rel)}, '${eid}'))">관련 문항만 보기 (${rel.length})</button>
+      <button class="pill-btn ghost" onclick="closeOv();openChapter(${d.no})">${pad(d.no)}강 전체 학습</button>
+    </div>`, 'sheet');
+}
+function qListItem(no, q, d){
+  const p = PROG[keyOf(no,q.n)]; const stat = !p ? '<span class="chip gray">미학습</span>' : (p.due <= Date.now() ? '<span class="chip lo">복습 예정</span>' : `<span class="chip lg">단계 ${p.lv}</span>`);
+  return `<div class="qi"><div class="qi-h"><span class="qn-s">${q.n}</span>${stat}<span class="sp"></span><button class="btn-sm" onclick="closeOv();startSession({mode:'pick',ch:${no},keys:['${keyOf(no,q.n)}']})">풀기</button><button class="btn-sm" onclick="const t=this.closest('.qi').querySelector('.qi-info');t.hidden=!t.hidden">정보</button></div>
+      <div class="qi-t">${q.text.split(/(\{\{.+?\}\})/).map(p => { const m = p.match(/^\{\{(.+?)\}\}$/); return m ? `<b class="hl">${esc(m[1])}</b>` : highlight(p, d, q.kw, null); }).join('')}</div>
+      <div class="qi-info" hidden>${qInfoHtml(keyOf(no,q.n), null)}</div></div>`;
+}
+async function openRelList(keys, eid){
+  const chs = [...new Set(keys.map(k => parseKey(k).ch))]; for (const c of chs) await loadCh(c);
+  overlay(`<div class="row" style="justify-content:space-between;margin-bottom:6px"><div class="b" style="font-size:16px">관련 빈칸 문항 <span class="muted small">${keys.length}개</span></div></div>
+    <div class="small muted" style="margin-bottom:8px">기출의 지문·선지에 나온 내용과 겹치는 문항입니다. 다른 강의 문항도 함께 모았습니다.</div>
+    <div class="row" style="margin-bottom:10px"><button class="pill-btn" style="flex:1" onclick="closeOv();startSession({mode:'pick',ch:${parseKey(keys[0]).ch},keys:${jsArr(keys)}})">이 ${keys.length}문항 풀기</button></div>
+    <div class="qlist">${chs.map(c => { const d = S.ch[c]; const ks = keys.filter(k => parseKey(k).ch===c); return `<div class="sect" style="margin:12px 0 2px">${pad(c)}강 ${esc(d.title)} <button onclick="closeOv();openChapter(${c}).then(()=>openQList(${c}))">전체 목록 ›</button></div>` + ks.map(k => qListItem(c, d.q.find(q => q.n===parseKey(k).n), d)).join(''); }).join('')}</div>`, 'sheet');
+}
+async function openQList(no, only){
+  const d = await loadCh(no); const list = only ? d.q.filter(q => only.includes(q.n)) : d.q;
+  const keys = list.map(q => keyOf(no, q.n));
+  overlay(`<div class="row" style="justify-content:space-between;margin-bottom:6px"><div class="b" style="font-size:16px">${pad(no)}강 문항 목록 <span class="muted small">${list.length}${only?'/'+d.q.length:''}개</span></div>${only?`<button class="btn-sm" onclick="closeOv();openQList(${no})">전체 보기</button>`:''}</div>
+    <div class="row" style="margin-bottom:10px"><button class="pill-btn" style="flex:1" onclick="closeOv();startSession({mode:'pick',ch:${no},keys:${jsArr(keys)}})">이 ${list.length}문항 풀기</button></div>
+    <div class="qlist">${list.map(q => qListItem(no, q, d)).join('')}</div>`, 'sheet');
+}
 /* ---------- DICTIONARY / SUMMARY / NOTES ---------- */
 async function openDict(no){
   let terms, alias, src;
@@ -802,7 +924,7 @@ function showTermData(ev, t, key, src, qn){
   if (ev && ev.stopPropagation) ev.stopPropagation();
   closePop();
   const s = S.sess; let masked = null;
-  if (qn && s && !s.checked[qn]) { const r = resolve(qn); if (r && r.q) masked = blanksOf(r.q.text); }
+  if (qn && s && !s.checked[qn]) { const r = resolve(qn); if (r && r.q) masked = blanksOf(qText(r.q)); }
   const imgs = (t.img||[]).map(k => typeof k==='string' ? src.images[k] : k).filter(Boolean).slice(0,1);
   const rel = (t.rel||[]).filter(r => r!==key);
   const pop = document.createElement('div'); pop.className='pop';
@@ -940,13 +1062,13 @@ function lightboxSrc(src, cap, credit, link){ const lb=document.createElement('d
 document.addEventListener('keydown', e => { if (e.key==='Escape') { closePop(); closeOv(); document.querySelector('.lightbox')?.remove(); } });
 
 /* Android back button (native wrapper) */
-window.appBack = function(){ const lb=document.querySelector('.lightbox'); if (lb) { lb.remove(); return true; } if (ovEl) { closeOv(); return true; } if (popEl) { closePop(); return true; } if (S.screen==='study') { leaveStudy(); return true; } if (S.screen==='result' || S.screen==='daily') { go(backTo||'home'); return true; } if (S.screen!=='home') { go('home'); return true; } return false; };
+window.appBack = function(){ const lb=document.querySelector('.lightbox'); if (lb) { lb.remove(); return true; } if (ovEl) { closeOv(); return true; } if (popEl) { closePop(); return true; } if (S.screen==='study') { leaveStudy(); return true; } if (S.screen!=='home') { goBack(); return true; } return false; };
 /* PWA: service worker (GitHub Pages / own hosting only; silently skipped elsewhere) */
 let SW = null;
 try { if ('serviceWorker' in navigator && location.protocol==='https:' && !/claude\.ai$/.test(location.hostname)) { navigator.serviceWorker.register('./sw.js').then(r => { SW = r; }).catch(()=>{}); } } catch(e) {}
 async function offlineAll(){
   if (!SW || !window.caches) { toast('이 환경에서는 오프라인 저장을 지원하지 않습니다'); return; }
-  const idx = await loadIndex(); const list = ['./','./index.html','./data/index.json','./data/glossary.json','./data/exam_all.json','./data/trend.json'];
+  const idx = await loadIndex(); const list = ['./','./index.html','./data/index.json','./data/glossary.json','./data/exam_all.json','./data/trend.json','./data/qindex.json'];
   READY().forEach(c => { list.push(`./data/ch${pad(c.no)}.json`); if (c.ni) list.push(`./sp/ch${pad(c.no)}.jpg`); });
     for (const c of READY()) { const d = await loadCh(c.no); Object.values(d.images).forEach(im => { if (!im.sp) list.push('./img/'+im.file); }); }
   const uniq = [...new Set(list)]; const cache = await caches.open('onnuri-v1'); let done = 0; const btn = $('#offbtn');
